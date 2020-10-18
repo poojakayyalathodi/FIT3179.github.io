@@ -6,14 +6,16 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
   <!-- Import vega-embed -->
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+
+  <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
 </head>
 <body>
 
-<div id="vis"></div>
+  <div id="dot_map"></div>
 
 <script type="text/javascript">
   var spec = "https://github.com/poojakayyalathodi/FIT3179.github.io/blob/master/visualization.vg.json";
-  vegaEmbed('#vis', spec).then(function(result) {
+  vegaEmbed('#dot_map', spec).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 </script>
