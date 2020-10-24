@@ -1,4 +1,4 @@
-﻿Entity,Year,"Total population",Continent,"GDP per capita",Per capita mismanaged plastic waste
+Country,Year,"Total population",Continent,"GDP_per_capita",Per_capita_mismanaged_plastic_waste
 Albania,2010,2948000,Europe,9927.181841,0.032
 Algeria,2010,35977000,Africa,12870.6027,0.086
 Angola,2010,23356000,Africa,5897.682841,0.045
