@@ -2,13 +2,8 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "width": 500,
-  "height": 400,
-  "title": {
-    "text": "Mismanaged plastic waste per capita vs GDP per capita in 2010",
-    "offset": 0,
-    "frame": "group"
-  },
+  "width": 380,
+  "height": 180,
   "style": "cell",
   "data": [
     {"name": "continent_highlight_store"},
@@ -161,7 +156,7 @@
     {
       "name": "x",
       "type": "linear",
-      "domain": [0, 50000],
+      "domain": [0, 80000],
       "range": [0, {"signal": "width"}],
       "nice": true,
       "zero": true
@@ -169,7 +164,7 @@
     {
       "name": "y",
       "type": "linear",
-      "domain": [0, 0.15],
+      "domain": [0, 0.17],
       "range": [{"signal": "height"}, 0],
       "nice": true,
       "zero": true
