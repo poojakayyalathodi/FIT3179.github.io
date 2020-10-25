@@ -6,16 +6,25 @@
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
   <!-- Import vega-embed -->
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-
-  <link rel="stylesheet" type="text/css" href="css/styles.css" media="all">
 </head>
 <body>
+<h1>Multiple Visualisations Update</h1>
 
-  <div id="dot_map"></div>
+<h2>This is the first visualisation</h2>
+<div id="vis1"></div>
+
+<h2>This is the second visualisation</h2>
+<div id="vis2"></div>
 
 <script type="text/javascript">
-  var spec = "https://github.com/poojakayyalathodi/FIT3179.github.io/blob/master/js/visualization.vg.json";
-  vegaEmbed('#dot_map', spec).then(function(result) {
+  var specVis1 = "js/mismanaged.vg.json";
+  var specVis2= "js/visualisation.vg.json";
+
+  vegaEmbed('#vis1', specVis1).then(function(result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+  
+   vegaEmbed('#vis2', specVis2).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 </script>
