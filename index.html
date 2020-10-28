@@ -21,11 +21,9 @@
     h1{
       font-weight: 900;
     }
-     body{
-       background-color: lightgray;
-     }
+     
      .page{
-       width: 850px;    
+           
        background-color: white;   
        margin: auto;
        padding: 50px;
@@ -139,7 +137,11 @@
    
 <script type="text/javascript">
   var specVis1 = "js/mismanaged.vg.json";
-  var specVis2= "js/visualization.vg.json";
+  var specVis2= "js/mismanaged.vg.json";
+  var specVis3 = "js/micro.vg.json";
+  var specVis4= "js/ macro.vg.json";
+  var specVis5 = "js/mismanaged.vg.json";
+  var specVis6= "js/visualization.vg.json";
 
   vegaEmbed('#vis1', specVis1, {"actions": false}).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
@@ -149,11 +151,11 @@
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 
-  vegaEmbed('#vis3', specVis1, {"actions": false}).then(function(result) {
+  vegaEmbed('#vis3', specVis3, {"actions": false}).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 
-  vegaEmbed('#vis4', specVis2, {"actions": false}).then(function(result) {
+  vegaEmbed('#vis4', specVis4, {"actions": false}).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 </script>
