@@ -1,0 +1,174 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 300,
+  "height": 200,
+  "style": "cell",
+  "data": [
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/data/global-plastic-fate.csv",
+      "format": {"type": "csv", "parse": {"Year": "date"}, "delimiter": ","},
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Year", "Entity"],
+          "ops": ["sum"],
+          "fields": ["Estimated_historic_plastic_fate"],
+          "as": ["sum_Estimated_historic_plastic_fate"]
+        },
+        {
+          "type": "impute",
+          "field": "sum_Estimated_historic_plastic_fate",
+          "groupby": ["Entity"],
+          "key": "Year",
+          "method": "value",
+          "value": 0
+        },
+        {
+          "type": "stack",
+          "groupby": ["Year"],
+          "field": "sum_Estimated_historic_plastic_fate",
+          "sort": {"field": ["Entity"], "order": ["descending"]},
+          "as": [
+            "sum_Estimated_historic_plastic_fate_start",
+            "sum_Estimated_historic_plastic_fate_end"
+          ],
+          "offset": "zero"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "pathgroup",
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "faceted_path_main",
+          "data": "source_0",
+          "groupby": ["Entity"]
+        }
+      },
+      "encode": {
+        "update": {
+          "width": {"field": {"group": "width"}},
+          "height": {"field": {"group": "height"}}
+        }
+      },
+      "marks": [
+        {
+          "name": "marks",
+          "type": "area",
+          "style": ["area"],
+          "sort": {"field": "datum[\"Year\"]"},
+          "from": {"data": "faceted_path_main"},
+          "encode": {
+            "update": {
+              "orient": {"value": "vertical"},
+              "fill": {"scale": "color", "field": "Entity"},
+              "description": {
+                "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%Y')) + \"; Plastic Fate: \" + (format(datum[\"sum_Estimated_historic_plastic_fate\"], \"\")) + \"; Estimated Plastic Fate: \" + (isValid(datum[\"Entity\"]) ? datum[\"Entity\"] : \"\"+datum[\"Entity\"])"
+              },
+              "x": {"scale": "x", "field": "Year"},
+              "y": {
+                "scale": "y",
+                "field": "sum_Estimated_historic_plastic_fate_end"
+              },
+              "y2": {
+                "scale": "y",
+                "field": "sum_Estimated_historic_plastic_fate_start"
+              },
+              "defined": {
+                "signal": "isValid(datum[\"Year\"]) && isFinite(+datum[\"Year\"]) && isValid(datum[\"sum_Estimated_historic_plastic_fate\"]) && isFinite(+datum[\"sum_Estimated_historic_plastic_fate\"])"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "time",
+      "domain": {"data": "source_0", "field": "Year"},
+      "range": [0, {"signal": "width"}]
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {
+        "data": "source_0",
+        "fields": [
+          "sum_Estimated_historic_plastic_fate_start",
+          "sum_Estimated_historic_plastic_fate_end"
+        ]
+      },
+      "range": [{"signal": "height"}, 0],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "source_0", "field": "Entity", "sort": true},
+      "range": "category"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Year",
+      "format": "%Y",
+      "labelFlush": true,
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Plastic Fate",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {"title": "Estimated Plastic Fate", "fill": "color", "symbolType": "circle"}
+  ],
+  "config": {}
+}
