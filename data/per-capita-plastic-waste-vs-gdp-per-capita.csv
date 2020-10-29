@@ -1,4 +1,4 @@
-Country,Code,Year,"Total_population","GDP_per_capita",Per_capita_plastic waste,Continent
+Country,Code,Year,"Total_population","GDP_per_capita",Per_capita_plastic_waste,Continent
 Albania,ALB,2010,2948000,9927.181841,0.069,Europe
 Algeria,DZA,2010,35977000,12870.6027,0.144,Africa
 Angola,AGO,2010,23356000,5897.682841,0.062,Africa
