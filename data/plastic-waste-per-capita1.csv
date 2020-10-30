@@ -1,4 +1,4 @@
-Country,Code,Percapita
+Entity,Code,Per capita plastic waste (kg/person/day)
 Albania,ALB,0.069
 Algeria,DZA,0.144
 Angola,AGO,0.062
@@ -185,53 +185,3 @@ Vanuatu,VUT,0.295
 Venezuela,VEN,0.252
 Vietnam,VNM,0.103
 Yemen,YEM,0.103
-Afghanistan,AAA,0
-Andorra,AAA,0
-Armenia,AAA,0
-Austria,AAA,0
-Azerbaijan,AAA,0
-Belarus,AAA,0
-Bhutan,AAA,0
-Bolivia,AAA,0
-Botswana,AAA,0
-Burkina Faso,AAA,0
-Burma,AAA,0
-Burundi,AAA,0
-Central African Republic,AAA,0
-Chad,AAA,0
-Colombia,AAA,0
-Comoros,AAA,0
-Czechia,AAA,0
-Eswatini,AAA,0
-Ethiopia,AAA,0
-Holy See,AAA,0
-Hungary,AAA,0
-Kazakhstan,AAA,0
-Kosovo,AAA,0
-Kyrgyzstan,AAA,0
-Laos,AAA,0
-Timor-Leste,AAA,0
-West Bank and Gaza,AAA,0
-Western Sahara,AAA,0
-Zambia,AAA,0
-Zimbabwe,AAA,0
-Uzbekistan,AAA,0
-Uganda,AAA,0
-Tajikistan,AAA,0
-Switzerland,AAA,0
-South Sudan,AAA,0
-Slovakia,AAA,0
-Serbia,AAA,0
-San Marino,AAA,0
-Rwanda,AAA,0
-Paraguay,AAA,0
-North Macedonia,AAA,0
-Niger,AAA,0
-Nepal,AAA,0
-Mongolia,AAA,0
-Moldova,AAA,0
-Mali,AAA,0
-Malawi,AAA,0
-Luxembourg,AAA,0
-Liechtenstein,AAA,0
-Lesotho,AAA,0
