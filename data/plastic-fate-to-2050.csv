@@ -1,4 +1,4 @@
-Entity,Year,Estimated historic plastic fate,Extrapolation of plastic fate,predicted
+Disposal,Year,Estimated_fate,Extrapolate,predicted
 Discarded,1980,100,,FALSE
 Discarded,1981,98.3,,FALSE
 Discarded,1982,97.6,,FALSE
