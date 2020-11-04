@@ -162,7 +162,7 @@
           "strokeDash": {"scale": "strokeDash", "field": "Predicted"},
           "ariaRoleDescription": {"value": "point"},
           "description": {
-            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y')) + \"; Emission trend: \" + (isValid(datum[\"Emission trend\"]) ? datum[\"Emission trend\"] : \"\"+datum[\"Emission trend\"]) + \"; Microplastics(tonnes): \" + (format(datum[\"Microplastics\"], \"\")) + \"; Forecast: \" + (isValid(datum[\"Predicted\"]) ? datum[\"Predicted\"] : \"\"+datum[\"Predicted\"])"
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y')) + \"; Emission trend: \" + (isValid(datum[\"Emission trend\"]) ? datum[\"Emission trend\"] : \"\"+datum[\"Emission trend\"]) + \"; Microplastics (tonnes): \" + (format(datum[\"Microplastics\"], \"\")) + \"; Forecast: \" + (isValid(datum[\"Predicted\"]) ? datum[\"Predicted\"] : \"\"+datum[\"Predicted\"])"
           },
           "x": {"scale": "x", "field": "Year"},
           "y": {"scale": "y", "field": "Microplastics"}
