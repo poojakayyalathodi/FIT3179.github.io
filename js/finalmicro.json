@@ -7,8 +7,7 @@
   "title": {
    
     "fontSize": 16,
-    "frame": "group",
-    "fontStyle": "Rubik"
+    "frame": "group"
   },
   "style": "cell",
   "data": [
