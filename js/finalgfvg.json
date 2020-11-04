@@ -1,0 +1,576 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 600,
+  "height": 400,
+  "title": {
+    "text": "Plastic Disposal Method Trends",
+    "fontSize": 16,
+    "fontStyle": "Rubik",
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {"name": "hover_store"},
+    {"name": "disposal_store"},
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/data/global-plastic-fate.csv",
+      "format": {"type": "csv", "parse": {"Year": "date"}, "delimiter": ","},
+      "transform": [
+        {
+          "type": "formula",
+          "expr": "if(datum.disposal === 'Recycled', 0, if(datum.disposal === 'Incinerated', 1, 2))",
+          "as": "siteOrder"
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Year", "disposal", "siteOrder"],
+          "ops": ["sum"],
+          "fields": ["fate"],
+          "as": ["sum_fate"]
+        },
+        {
+          "type": "impute",
+          "field": "sum_fate",
+          "groupby": ["disposal", "siteOrder"],
+          "key": "Year",
+          "method": "value",
+          "value": 0
+        },
+        {
+          "type": "stack",
+          "groupby": ["Year"],
+          "field": "sum_fate",
+          "sort": {"field": ["siteOrder"], "order": ["ascending"]},
+          "as": ["sum_fate_start", "sum_fate_end"],
+          "offset": "normalize"
+        }
+      ]
+    },
+    {
+      "name": "data_1",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "(isDate(datum[\"Year\"]) || (isValid(datum[\"Year\"]) && isFinite(+datum[\"Year\"])))"
+        }
+      ]
+    },
+    {
+      "name": "data_2",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "(isDate(datum[\"Year\"]) || (isValid(datum[\"Year\"]) && isFinite(+datum[\"Year\"])))"
+        }
+      ]
+    },
+    {
+      "name": "data_3",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "pivot",
+          "field": "disposal",
+          "value": "fate",
+          "groupby": ["Year"]
+        },
+        {"type": "formula", "expr": "toDate(datum[\"Year\"])", "as": "Year"},
+        {
+          "field": "Year",
+          "type": "timeunit",
+          "units": ["year"],
+          "as": ["year_Year", "year_Year_end"]
+        },
+        {
+          "type": "filter",
+          "expr": "(isDate(datum[\"Year\"]) || (isValid(datum[\"Year\"]) && isFinite(+datum[\"Year\"])))"
+        }
+      ]
+    },
+    {
+      "name": "data_4",
+      "source": "source_0",
+      "transform": [
+        {"type": "filter", "expr": "(vlSelectionTest(\"hover_store\", datum))"},
+        {
+          "type": "aggregate",
+          "groupby": ["Year", "disposal", "siteOrder"],
+          "ops": ["sum"],
+          "fields": ["fate"],
+          "as": ["sum_fate"]
+        },
+        {
+          "type": "stack",
+          "groupby": ["Year"],
+          "field": "sum_fate",
+          "sort": {"field": ["siteOrder"], "order": ["ascending"]},
+          "as": ["sum_fate_start", "sum_fate_end"],
+          "offset": "normalize"
+        },
+        {
+          "type": "filter",
+          "expr": "(isDate(datum[\"Year\"]) || (isValid(datum[\"Year\"]) && isFinite(+datum[\"Year\"]))) && isValid(datum[\"sum_fate\"]) && isFinite(+datum[\"sum_fate\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "hover",
+      "update": "vlSelectionResolve(\"hover_store\", \"union\")"
+    },
+    {
+      "name": "disposal",
+      "update": "vlSelectionResolve(\"disposal_store\", \"union\", true)"
+    },
+    {
+      "name": "hover_tuple",
+      "on": [
+        {
+          "events": [
+            {
+              "source": "scope",
+              "type": "mouseover",
+              "markname": "layer_8_voronoi"
+            }
+          ],
+          "update": "datum && item().mark.marktype !== 'group' ? {unit: \"layer_8\", fields: hover_tuple_fields, values: [(item().isVoronoi ? datum.datum : datum)[\"Year\"]]} : null",
+          "force": true
+        },
+        {"events": [{"source": "scope", "type": "mouseout"}], "update": "null"}
+      ]
+    },
+    {"name": "hover_tuple_fields", "value": [{"type": "E", "field": "Year"}]},
+    {
+      "name": "hover_modify",
+      "on": [
+        {
+          "events": {"signal": "hover_tuple"},
+          "update": "modify(\"hover_store\", hover_tuple, true)"
+        }
+      ]
+    },
+    {"name": "disposal_tuple"},
+    {
+      "name": "disposal_tuple_fields",
+      "value": [{"type": "E", "field": "disposal"}]
+    },
+    {
+      "name": "disposal_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "disposal_modify",
+      "on": [
+        {
+          "events": {"signal": "disposal_tuple"},
+          "update": "modify(\"disposal_store\", disposal_toggle ? null : disposal_tuple, disposal_toggle ? null : true, disposal_toggle ? disposal_tuple : null)"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_layer_0_pathgroup",
+      "type": "group",
+      "from": {
+        "facet": {
+          "name": "faceted_path_layer_0_layer_0_main",
+          "data": "data_0",
+          "groupby": ["disposal", "siteOrder"]
+        }
+      },
+      "encode": {
+        "update": {
+          "width": {"field": {"group": "width"}},
+          "height": {"field": {"group": "height"}}
+        }
+      },
+      "marks": [
+        {
+          "name": "layer_0_layer_0_marks",
+          "type": "area",
+          "style": ["area"],
+          "sort": {"field": "datum[\"Year\"]"},
+          "interactive": false,
+          "from": {"data": "faceted_path_layer_0_layer_0_main"},
+          "encode": {
+            "update": {
+              "orient": {"value": "vertical"},
+              "fill": {"scale": "color", "field": "disposal"},
+              "opacity": [
+                {
+                  "test": "!(length(data(\"disposal_store\"))) || (vlSelectionTest(\"disposal_store\", datum))",
+                  "value": 0.6
+                },
+                {"value": 0.2}
+              ],
+              "description": {
+                "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y')) + \"; Plastic Disposed: \" + (format(datum[\"sum_fate_end\"]-datum[\"sum_fate_start\"], \"\")) + \"; Disposal Method: \" + (isValid(datum[\"disposal\"]) ? datum[\"disposal\"] : \"\"+datum[\"disposal\"]) + \"; siteOrder: \" + (isValid(datum[\"siteOrder\"]) ? datum[\"siteOrder\"] : \"\"+datum[\"siteOrder\"])"
+              },
+              "x": {"scale": "x", "field": "Year"},
+              "y": {"scale": "y", "field": "sum_fate_end"},
+              "y2": {"scale": "y", "field": "sum_fate_start"},
+              "defined": {
+                "signal": "isValid(datum[\"Year\"]) && isFinite(+datum[\"Year\"]) && isValid(datum[\"sum_fate\"]) && isFinite(+datum[\"sum_fate\"])"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "layer_0_layer_1_marks",
+      "type": "symbol",
+      "style": ["point"],
+      "interactive": false,
+      "from": {"data": "data_4"},
+      "encode": {
+        "update": {
+          "fill": {"value": "transparent"},
+          "stroke": {"scale": "color", "field": "disposal"},
+          "opacity": [
+            {
+              "test": "!(length(data(\"disposal_store\"))) || (vlSelectionTest(\"disposal_store\", datum))",
+              "value": 0.6
+            },
+            {"value": 0.2}
+          ],
+          "ariaRoleDescription": {"value": "point"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y')) + \"; Plastic Disposed: \" + (format(datum[\"sum_fate_end\"]-datum[\"sum_fate_start\"], \"\")) + \"; Disposal Method: \" + (isValid(datum[\"disposal\"]) ? datum[\"disposal\"] : \"\"+datum[\"disposal\"]) + \"; siteOrder: \" + (isValid(datum[\"siteOrder\"]) ? datum[\"siteOrder\"] : \"\"+datum[\"siteOrder\"])"
+          },
+          "x": {"scale": "x", "field": "Year"},
+          "y": {"scale": "y", "field": "sum_fate_end"}
+        }
+      }
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "rule",
+      "style": ["rule"],
+      "interactive": false,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "strokeDash": {"value": [2, 4]},
+          "stroke": {"value": "black"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(1990, 0, 1, 0, 0, 0, 0)"},
+          "y": {"value": 0},
+          "y2": {"field": {"group": "height"}}
+        }
+      }
+    },
+    {
+      "name": "layer_2_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": false,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "right"},
+          "text": {"value": "55% of plastic discarded"},
+          "dx": {"value": 405},
+          "dy": {"value": -15},
+          "fontSize": {"value": 12},
+          "fontWeight": {"value": 100},
+          "fill": {"value": "white"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(1990, 0, 1, 0, 0, 0, 0)"},
+          "y": {"signal": "height", "mult": 0.5},
+          "baseline": {"value": "middle"}
+        }
+      }
+    },
+    {
+      "name": "layer_3_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": false,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "right"},
+          "text": {"value": "70% of plastic discarded"},
+          "dx": {"value": 180},
+          "dy": {"value": 15},
+          "fontSize": {"value": 12},
+          "fontWeight": {"value": 100},
+          "fill": {"value": "white"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(1990, 0, 1, 0, 0, 0, 0)"},
+          "y": {"signal": "height", "mult": 0.5},
+          "baseline": {"value": "middle"}
+        }
+      }
+    },
+    {
+      "name": "layer_4_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": false,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "right"},
+          "text": {"value": "90% of plastic discarded"},
+          "dx": {"value": -10},
+          "dy": {"value": 58},
+          "fontSize": {"value": 12},
+          "fontWeight": {"value": 100},
+          "fill": {"value": "white"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(1990, 0, 1, 0, 0, 0, 0)"},
+          "y": {"signal": "height", "mult": 0.5},
+          "baseline": {"value": "middle"}
+        }
+      }
+    },
+    {
+      "name": "layer_5_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": false,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "right"},
+          "text": {"value": "20% of plastic recycled"},
+          "dx": {"value": 397},
+          "dy": {"value": 170},
+          "fontSize": {"value": 12},
+          "fontWeight": {"value": 100},
+          "fill": {"value": "black"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(1990, 0, 1, 0, 0, 0, 0)"},
+          "y": {"signal": "height", "mult": 0.5},
+          "baseline": {"value": "middle"}
+        }
+      }
+    },
+    {
+      "name": "layer_6_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": false,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "right"},
+          "text": {"value": "25% of plastic incinerated"},
+          "dx": {"value": 410},
+          "dy": {"value": 95},
+          "fontSize": {"value": 12},
+          "fontWeight": {"value": 100},
+          "fill": {"value": "black"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(1990, 0, 1, 0, 0, 0, 0)"},
+          "y": {"signal": "height", "mult": 0.5},
+          "baseline": {"value": "middle"}
+        }
+      }
+    },
+    {
+      "name": "layer_7_marks",
+      "type": "rule",
+      "style": ["rule"],
+      "interactive": false,
+      "from": {"data": "data_2"},
+      "encode": {
+        "update": {
+          "strokeDash": {"value": [2, 4]},
+          "stroke": {"value": "black"},
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y'))"
+          },
+          "x": {"scale": "x", "signal": "datetime(2004, 0, 1, 0, 0, 0, 0)"},
+          "y": {"value": 0},
+          "y2": {"field": {"group": "height"}}
+        }
+      }
+    },
+    {
+      "name": "layer_8_marks",
+      "type": "rule",
+      "style": ["rule"],
+      "interactive": true,
+      "from": {"data": "data_3"},
+      "encode": {
+        "update": {
+          "stroke": {"value": "black"},
+          "opacity": [
+            {"test": "(vlSelectionTest(\"hover_store\", datum))", "value": 0.6},
+            {"value": 0}
+          ],
+          "tooltip": {
+            "signal": "{\"Year\": timeFormat(datum[\"year_Year\"], timeUnitSpecifier([\"year\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})), \"Discarded\": format(datum[\"Discarded\"], \"\"), \"Incinerated\": format(datum[\"Incinerated\"], \"\"), \"Recycled\": format(datum[\"Recycled\"], \"\")}"
+          },
+          "description": {
+            "signal": "\"Year: \" + (timeFormat(datum[\"Year\"], '%b %d, %Y')) + \"; Discarded: \" + (format(datum[\"Discarded\"], \"\")) + \"; Incinerated: \" + (format(datum[\"Incinerated\"], \"\")) + \"; Recycled: \" + (format(datum[\"Recycled\"], \"\"))"
+          },
+          "x": {"scale": "x", "field": "Year"},
+          "y": {"value": 0},
+          "y2": {"field": {"group": "height"}}
+        }
+      }
+    },
+    {
+      "name": "layer_8_voronoi",
+      "type": "path",
+      "interactive": true,
+      "from": {"data": "layer_8_marks"},
+      "encode": {
+        "update": {
+          "fill": {"value": "transparent"},
+          "strokeWidth": {"value": 0.35},
+          "stroke": {"value": "transparent"},
+          "isVoronoi": {"value": true},
+          "tooltip": {
+            "signal": "{\"Year\": timeFormat(datum.datum[\"year_Year\"], timeUnitSpecifier([\"year\"], {\"year-month\":\"%b %Y \",\"year-month-date\":\"%b %d, %Y \"})), \"Discarded\": format(datum.datum[\"Discarded\"], \"\"), \"Incinerated\": format(datum.datum[\"Incinerated\"], \"\"), \"Recycled\": format(datum.datum[\"Recycled\"], \"\")}"
+          }
+        }
+      },
+      "transform": [
+        {
+          "type": "voronoi",
+          "x": {"expr": "datum.datum.x || 0"},
+          "y": {"expr": "datum.datum.y || 0"},
+          "size": [{"signal": "width"}, {"signal": "height"}]
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "time",
+      "domain": {
+        "fields": [
+          {"data": "data_0", "field": "Year"},
+          {"data": "data_4", "field": "Year"},
+          {"signal": "{data: datetime(1990, 0, 1, 0, 0, 0, 0)}"},
+          {"signal": "{data: datetime(2004, 0, 1, 0, 0, 0, 0)}"},
+          {"data": "data_3", "field": "Year"}
+        ]
+      },
+      "range": [0, {"signal": "width"}]
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": [0, 1],
+      "range": [{"signal": "height"}, 0],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {
+        "fields": [
+          {"data": "data_0", "field": "disposal"},
+          {"data": "data_4", "field": "disposal"}
+        ],
+        "sort": true
+      },
+      "range": {"scheme": "set1"}
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Year",
+      "labelFlush": true,
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(width/40)"},
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Plastic Disposed",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "title": "Disposal Method",
+      "fill": "color",
+      "symbolType": "circle",
+      "encode": {"symbols": {"update": {"opacity": {"value": 0.6}}}},
+      "stroke": "color"
+    }
+  ],
+  "config": {}
+}
