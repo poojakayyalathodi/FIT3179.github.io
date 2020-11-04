@@ -5,7 +5,7 @@
   "width": 500,
   "height": 300,
   "title": {
-    "text":"Microplastics in Ocean"
+    "text":"Microplastics in Ocean",
     "fontSize": 16,
     "frame": "group"
   },
