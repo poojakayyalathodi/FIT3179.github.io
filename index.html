@@ -1,32 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Plastic Waste Management</title>
-  <!-- Import Vega & Vega-Lite (does not have to be from CDN) -->
+  <title>Plastic Pollution</title>
+  <!-- Import Vega & Vega-Lite -->
   <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@4"></script>
   <!-- Import vega-embed -->
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
   <!-- Import pure.css -->
   <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Google font -->
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700;900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300;0,500;0,700;0,800;1,300;1,500;1,800&display=swap"
+    rel="stylesheet">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
 
-  <!-- custom style -->
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+  <!-- custom CSS -->
   <style>
     *{
-      font-family: 'Source Sans Pro', sans-serif;
+      font-family: 'Rubik', 'sans-serif' !important;
     }
     h1{
-      font-weight: 900;
+      font-weight: 800;
+      font-size: 58px;
+   
     }
-    body{
-       background-color: light-grey;
+    h2{
+      font-weight: 500;
+      font-size: 22px;
     }
-     
+     body{
+       background-color: black;
+     }
      .page{
- 
+       width: 1155px;    
        background-color: white;   
        margin: auto;
        padding: 50px;
@@ -47,9 +59,20 @@
     .pure-g{
       margin-bottom: 25px;
     }
-    .small-font{
-        font-size: 14px;
+    p{
+     font-size: 18px;
+     font-weight: 300;
+     color: #505050;
+     text-align: justify;
     }
+    .small-font{
+      font-size: 13px;
+      font-weight: 300;
+    }
+    svg{
+    display: block;
+    margin: auto;
+}
   </style>
 </head>
 <body>
@@ -59,88 +82,195 @@
    <!-- pure grid group -->
     <div class="pure-g">
       <div class="pure-u-1-1">
-        <h1>Plastic Waste Management Around The World</h1>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa sapien faucibus et molestie ac feugiat sed. Egestas purus viverra accumsan in nisl</p>
-      </div>
-    </div>
-  <!-- end pure grid group -->
-
-    <!-- pure grid group -->
-    <div class="pure-g">
-        <div class="pure-u-1-3">
-          <div class="description description-left">
-            <h2>This is the first section</h2>
-            <p>The first column is used for description while the next two columns are merged and used for visualisation. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa sapien faucibus et molestie ac feugiat sed. </p>
+        <h1>Plastic Pollution</h1>
+        <p>Plastic, a dangerous manmade invention, once considered a blessing now becoming the reason for world-wide destruction.From, the pens we write with to the device that you are using to view
+          this infographic, most likely has elements of plastic embedded to it. This
+          visualisation gives us a
+          good idea about the history of plastic and uses it to  predict the future of plastic pollution & its impact on the world. </p>
+        </div>
+        </div>
+        <!-- end pure grid group -->
+        <br>
+        <!-- pure grid group -->
+        <div class="pure-g">
+          <div class="pure-u-9-24">
+            <div class="description description-left">
+              <h2>Plastic Waste Generated per Person  (2010)</h2>
+              <p> This world map shows us the per capita rate of plastic waste generation,measured in kilograms per person per day. 
+                <br><br>
+                Daily per capita plastic waste generated some of the across highest countries -
+                <b style="font-size: 20px;">United States, Germany, Guyana </b> is more than  <b
+                  style="font-size: 17px;">ten times</b> </b> that of the lowest countries -<b style="font-size: 17px;"> India, Bangladesh and Mozambique</b>.
+            <br><br>
+           Find out the daily per capita plastic waste generated per person in your country by hovering over on the map. 
+            <br><br>
+            <a href="http://science.sciencemag.org/content/347/6223/768/" style="font-size: 12px;">Source: http://science.sciencemag.org/content/347/6223/768/</a>
+            
+              </p>
+            </div>
+          </div>
+          <div class="pure-u-15-24">
+            <div id="vis1" class="vis-container"></div>
           </div>
         </div>
-        <div class="pure-u-2-3">
-          <div id="vis1" class="vis-container"></div>
-        </div>
-    </div>
-    <!-- end pure grid group -->
-
-    <!-- pure grid group -->
-    <div class="pure-g">
-        <div class="pure-u-1-3">
-          <div id="vis3"  class="vis-container"></div>
-        </div>
-       <div class="pure-u-1-3">
-          <div id="vis4"  class="vis-container"></div>
-        </div>
-<!--         <div class="pure-u-2-3">
-          <div class="description description-right">
-            <h2>This is the second section</h2>
-            <p>Similar to the previous section, but the colum partition is swapped. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa sapien faucibus et molestie ac feugiat sed. Egestas purus viverra accumsan in nisl.</p>
+        <!-- end pure grid group -->
+        
+        <!-- pure grid group -->
+        <div class="pure-g">
+          <div class="pure-u-9-24">
+            <div class="description description-left">
+              <h2>Factors determining plastic waste production</h2>
+              <p>
+                The chart on the right shows us plastic waste generated per person versus Gross Domestic Product <b
+                  style="font-size: 20px; color:#5e3c99;">(GDP) </b>per capita. GDP per capita is an indicator used to make cross-country comparisons of average living standards and well-being.
+                <br><br>
+                Here, a pattern to be noticed is that plastic waste generation tends to increase as we get <b
+                  style="font-size: 20px; color:#5e3c99;">richer</b> although there are variations across countries at all levels of development.<b
+                  style="font-size: 20px; color:#5e3c99;"> Population</b> has <b
+                  style="font-size: 20px; color:#5e3c99;">no influence </b>over plastic waste production.
+                <br><br>
+                <a href="http://science.sciencemag.org/content/347/6223/768/" style="font-size: 12px;">Source: http://science.sciencemag.org/content/347/6223/768/</a>
+                
+               
+              </p>
+            </div>
           </div>
-        </div> -->
-    </div>
-    <!-- end pure grid group -->
-
-    <!-- pure grid group -->
-    <div class="pure-g">
-      <div class="pure-u-1-3">
-        <div class="description description-left">
-          <h2>This is the third section</h2>
-          <p>Using all three columns without merging. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa sapien faucibus et molestie ac feugiat sed. Egestas purus viverra accumsan in nisl.</p>
-        </div>
-      </div>
-      <div class="pure-u-2-3">
-        <div id="vis3"  class="vis-container"></div>
-      </div>
-    
-    </div>
-    <!-- end pure grid group -->
-
-     <!-- pure grid group -->
-    <div class="pure-g">
-        <div class="pure-u-2-3">
-          <div id="vis5"  class="vis-container"></div>
-      </div>
-        <div class="pure-u-1-3">
-          <div class="description description-right">
-            <h2>This is the fourth section</h2>
-            <p>Similar to the previous section, but the colum partition is swapped. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Massa sapien faucibus et molestie ac feugiat sed. Egestas purus viverra accumsan in nisl.</p>
+          <div class="pure-u-15-24">
+            <div id="vis2" class="vis-container"></div>
           </div>
         </div>
+        <!-- end pure grid group -->
+        
+        <br>
+        <br>
+        <br>
+        
+        <!-- pure grid group -->
+        <div class="pure-g">
+          <div class="pure-u-9-24">
+            <div class="description description-left">
+              <h2>Plastic Disposal Methods <br> (1950 - 2015)</h2>
+              <p>
+               This normalised area chart shows the evolution of different disposal methods used over the years. Hover over the graph to see the split between the % of discarded,incinerated and recycled plastic for each year. <br><br>There has been a steady improvement over the years in the way plastic is disposed with a stable decrease in <b style="font-size: 20px; color:#1167b1;">discarded</b> on average by 
+                <b style="font-size: 20px; color:#1167b1;">14%</b> every ten years from 1990.From 1980 for  <b style="font-size: 20px; color:#5ca08e;">inceration</b> and 1990 for  <b style="font-size: 20px; color:#5ca08e;">recycling</b>, rates increased on average by  <b style="font-size: 20px; color:#5ca08e;">0.7%</b> per year. 
+        <br><br>
+                Scroll down to read more on the future of plastic waste disposal.
+                <br><br>
+                <a href="https://www.nature.com/articles/s41598-019-49413-5" style="font-size: 12px;">Source: 	https://www.nature.com/articles/s41598-019-49413-5l</a>
+              </p>
+            </div>
+          </div>
+          <div class="pure-u-15-24">
+            <div id="vis4" class="vis-container"></div>
+          </div>
+        </div>
+        <!-- end pure grid group -->
+        
+        <br>
+        <br>
+        <br>
+        
+        
+        <!-- pure grid group -->
+        <div class="pure-g">
+          <div class="pure-u-9-24">
+            <div class="description description-left">
+              <h2>Extrapolation of Change in Plastic Disposal Methods used</h2>
+              <p>
+               
+                From the chart above, we concluded that incineration and recycling plastic has been gaining popularity over the years. Meaning that discardation of plastic will soon become part of the past. 
+               <br><br> This line chart shows the extrapolation of the historical trends displayed above to predict what methods are going to be used in the future, and as can be seen <b style="font-size: 20px; color:#FFA500;">incineration</b> rates would rise to <b style="font-size: 20px; color:#FFA500;">50%</b> and <b style="font-size: 20px; color:#b22222;">recycling</b> to <b style="font-size: 20px; color:#b22222;">44% </b>by 2050.
+                <br><br>
+                <a href="	http://advances.sciencemag.org/content/3/7/e1700782.full" style="font-size: 12px;">Source: 	http://advances.sciencemag.org/content/3/7/e1700782.full</a>
+              </p>
+            </div>
+          </div>
+          <div class="pure-u-15-24">
+            <div id="vis3" class="vis-container"></div>
+          </div>
+        </div>
+        <!-- end pure grid group -->
+        
+        
+
+       
+        
+          <br>
+          <br>
+          <br>
+        <!-- pure grid group -->
+        <div class="pure-g">
+          <div class="pure-u-9-24">
+            <div class="description description-left">
+              <h2>Microplastics and Macroplastics in Surface Ocean based on emission trends<br>(1950-2050)</h2>
+              <p>
+               Microplastics are bouyant plastic materials that are smaller than 0.5 cm in diameter.The chart on the right shows the prediction from 2019 to 2050 for differenent emission scenarios.
+                <br><br>
+               There is a possiblity of reducing the amount of microplastics going into oceans by about <b style="font-size: 20px; color:#b22222;">200%</b> if we stop emissions by 2020, compared to continuing to emit at a stagnant rate and growth of emission rate.
+                
+              </p>
+            </div>
+          </div>
+          <div class="pure-u-15-24">
+            <div id="vis5" class="vis-container"></div>
+          </div>
+        </div>
+        <!-- end pure grid group -->
+        
+       
+       
+        <!-- pure grid group -->
+        <div class="pure-g">
+          <div class="pure-u-9-24">
+            <div class="description description-left">
+              <h2>Macroplastics in Surface Ocean based on emission trends<br>(1950-2050)</h2>
+             <p>
+                Macroplastics are bouyant plastic materials that are greater than 0.5 cm in diameter. The chart on the right shows the prediction from 2019 to 2050 for differenent emission scenarios. 
+               <br><br>
+               Unlike, microplastics amount of macroplastics  in the oceans reduces by<b style="font-size: 20px; color:#5ca08e;"> 54%</b> , compared to the amount of macroplastics in the ocean in 2020. 
+              </p>
+            </div>
+          </div>
+          <div class="pure-u-15-24">
+            <div id="vis6" class="vis-container"></div>
+          </div>
+          </div>
+          <!-- end pure grid group -->
+            <br>
+            <br>
+            <br>
+           
+               
+                      <!-- Create a div where the graph will take place -->
+                      <div id="my_dataviz">
+                        <!-- Create a div for the tooltip -->
+                        <div id="tooltip"></div>
+                  </div>
+            
+                </div>
+              </div>
+              </div>
+              <!-- end pure grid group -->
+              <br>
+            
+           
+         
+        
+      </div>
     </div>
-    <!-- end pure grid group -->
   
-    <div class="pure-g">
-      <div class="pure-u-1-1 small-font">
-        <p>This visualisation is created by <a href="https://github.com/poojakayyalathodi/pkay0002.github.io" target="_blank">Pooja Kayyalathodi</a>.</p>
-      </div>
-    </div>
   
 
   </div> <!-- end page -->
    
 <script type="text/javascript">
-  var specVis1 = "js/world.json";
-  var specVis2= "js/mismanaged.vg.json";
-  var specVis3 = "js/micro.vg.json";
-  var specVis4= "js/ macro.vg.json";
-  var specVis5 = "js/epf.json";
-  var specVis6= "js/visualization.vg.json";
+  var specVis1 = "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/js/finalMap.json";
+                                                                                                                                                                   var specVis2 = "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/js/splot.json";
+                                                                                                                                                                  var specVis3 = "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/js/extrapolate.json";
+                                                                                                                                                                                              var specVis4 = "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/js/finalgfvg.json";
+                                                                                                                                                                                              var specVis5 = "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/js/finalmicro.json";
+                                                                                                                                                                                              var specVis6 = "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/js/finalmacro.json";
+                                                                                                                                     
 
   vegaEmbed('#vis1', specVis1, {"actions": false}).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
@@ -150,15 +280,28 @@
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 
-  vegaEmbed('#vis3', specVis3, {"actions": false}).then(function(result) {
+  vegaEmbed('#vis3', specVis3, { "actions": false }).then(function (result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 
-  vegaEmbed('#vis4', specVis4, {"actions": false}).then(function(result) {
+  vegaEmbed('#vis4', specVis4, { "actions": false }).then(function (result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
-   vegaEmbed('#vis5', specVis5, {"actions": false}).then(function(result) {
+
+  vegaEmbed('#vis5', specVis5, { "actions": false }).then(function (result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
+
+  vegaEmbed('#vis6', specVis6, { "actions": false }).then(function (result) {
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
+
+ 
+
+
+
+
+
 </script>
 </body>
+</html>
