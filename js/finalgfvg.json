@@ -4,12 +4,7 @@
   "padding": 5,
   "width": 600,
   "height": 400,
-  "title": {
-    "text": "Plastic Disposal Method Trends",
-    "fontSize": 16,
-    "fontStyle": "Rubik",
-    "frame": "group"
-  },
+ 
   "style": "cell",
   "data": [
     {"name": "hover_store"},
