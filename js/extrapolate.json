@@ -1,0 +1,382 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 600,
+  "height": 200,
+  "title": {
+    "text": "Plastic Generated per Capita vs. GDP per Capita",
+    "fontSize": 18,
+    "frame": "group"
+  },
+  "style": "cell",
+  "data": [
+    {"name": "continent_highlight_store"},
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/poojakayyalathodi/pkay0002.github.io/master/data/per-capita-plastic-waste-vs-gdp-per-capita.csv",
+      "format": {"type": "csv", "delimiter": ","},
+      "transform": [
+        {"type": "filter", "expr": "datum.GDP_PER_CAPITA < 60000"},
+        {"type": "filter", "expr": "datum.GDP_PER_CAPITA > 1000"},
+        {"type": "filter", "expr": "datum.PER_CAPITA_PLASTIC < 0.4"},
+        {"type": "filter", "expr": "datum.Population > Population_Above"},
+        {
+          "type": "filter",
+          "expr": "Continent_selection == null || datum.Continent ==Continent_selection"
+        }
+      ]
+    },
+    {
+      "name": "data_0",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"GDP_PER_CAPITA\"]) && isFinite(+datum[\"GDP_PER_CAPITA\"]) && isValid(datum[\"PER_CAPITA_PLASTIC\"]) && isFinite(+datum[\"PER_CAPITA_PLASTIC\"]) && isValid(datum[\"Population\"]) && isFinite(+datum[\"Population\"])"
+        }
+      ]
+    },
+    {
+      "name": "data_1",
+      "source": "source_0",
+      "transform": [
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"GDP_PER_CAPITA\"]) && isFinite(+datum[\"GDP_PER_CAPITA\"]) && isValid(datum[\"PER_CAPITA_PLASTIC\"]) && isFinite(+datum[\"PER_CAPITA_PLASTIC\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "continent_highlight_Continent_legend",
+      "value": null,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "Continent_legend_symbols"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "Continent_legend_labels"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "Continent_legend_entries"
+            }
+          ],
+          "update": "datum.value || item().items[0].items[0].datum.value",
+          "force": true
+        },
+        {
+          "events": [{"source": "view", "type": "click"}],
+          "update": "!event.item || !datum ? null : continent_highlight_Continent_legend",
+          "force": true
+        }
+      ]
+    },
+    {
+      "name": "continent_highlight",
+      "update": "vlSelectionResolve(\"continent_highlight_store\", \"union\", true)"
+    },
+    {
+      "name": "Population_Above",
+      "value": 0,
+      "bind": {
+        "input": "range",
+        "min": 0,
+        "max": 100000000,
+        "step": 1000000,
+        "name": "Population: "
+      }
+    },
+    {
+      "name": "Continent_selection",
+      "bind": {
+        "input": "select",
+        "options": [
+          null,
+          "North America",
+          "South America",
+          "Europe",
+          "Africa",
+          "Asia",
+          "Oceania"
+        ],
+        "labels": [
+          "Show All",
+          "North America",
+          "South America",
+          "Europe",
+          "Africa",
+          "Asia",
+          "Oceania"
+        ],
+        "name": "Continent Selection: "
+      }
+    },
+    {
+      "name": "continent_highlight_tuple",
+      "update": "continent_highlight_Continent_legend !== null ? {fields: continent_highlight_tuple_fields, values: [continent_highlight_Continent_legend]} : null"
+    },
+    {
+      "name": "continent_highlight_tuple_fields",
+      "value": [{"type": "E", "field": "Continent"}]
+    },
+    {
+      "name": "continent_highlight_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "continent_highlight_modify",
+      "on": [
+        {
+          "events": {"signal": "continent_highlight_tuple"},
+          "update": "modify(\"continent_highlight_store\", continent_highlight_toggle ? null : continent_highlight_tuple, continent_highlight_toggle ? null : true, continent_highlight_toggle ? continent_highlight_tuple : null)"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "symbol",
+      "style": ["circle"],
+      "interactive": true,
+      "from": {"data": "data_0"},
+      "encode": {
+        "update": {
+          "opacity": [
+            {
+              "test": "!(length(data(\"continent_highlight_store\"))) || (vlSelectionTest(\"continent_highlight_store\", datum))",
+              "value": 0.6
+            },
+            {"value": 0.2}
+          ],
+          "fill": {"scale": "color", "field": "Continent"},
+          "tooltip": {
+            "signal": "{\"Country\": isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"], \"Plastic waste per capita(kg)\": format(datum[\"PER_CAPITA_PLASTIC\"], \"0.3f\"), \"GDP per Capita($)\": format(datum[\"GDP_PER_CAPITA\"], \"0.2f\")}"
+          },
+          "ariaRoleDescription": {"value": "circle"},
+          "description": {
+            "signal": "\"GDP per Capita($ intl.): \" + (format(datum[\"GDP_PER_CAPITA\"], \"\")) + \"; Plastic per capita(kg): \" + (format(datum[\"PER_CAPITA_PLASTIC\"], \"\")) + \"; Population: \" + (format(datum[\"Population\"], \".1s\")) + \"; Continent: \" + (isValid(datum[\"Continent\"]) ? datum[\"Continent\"] : \"\"+datum[\"Continent\"]) + \"; Country: \" + (isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"]) + \"; Plastic waste per capita(kg): \" + (format(datum[\"PER_CAPITA_PLASTIC\"], \"0.3f\")) + \"; GDP per Capita($): \" + (format(datum[\"GDP_PER_CAPITA\"], \"0.2f\"))"
+          },
+          "x": {"scale": "x", "field": "GDP_PER_CAPITA"},
+          "y": {"scale": "y", "field": "PER_CAPITA_PLASTIC"},
+          "size": {"scale": "size", "field": "Population"},
+          "shape": {"value": "circle"}
+        }
+      }
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": true,
+      "from": {"data": "data_1"},
+      "encode": {
+        "update": {
+          "align": {"value": "right"},
+          "baseline": {"value": "middle"},
+          "dx": {"value": -12},
+          "fontSize": {"value": 11.5},
+          "fontStyle": {"value": "italic"},
+          "fill": {"value": "black"},
+          "opacity": [
+            {
+              "test": "datum['Country'] == 'China' ||datum['Country'] == 'India'|| datum['Country'] == 'Australia'  ||datum['Country'] == 'United States'",
+              "value": 1
+            },
+            {"value": 0}
+          ],
+          "tooltip": {
+            "signal": "{\"Country\": isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"], \"Plastic waste per capita(kg)\": format(datum[\"PER_CAPITA_PLASTIC\"], \"0.3f\"), \"GDP per capita($)\": format(datum[\"GDP_PER_CAPITA\"], \"0.2f\")}"
+          },
+          "description": {
+            "signal": "\"GDP per Capita($ intl.): \" + (format(datum[\"GDP_PER_CAPITA\"], \"\")) + \"; Plastic per capita(kg): \" + (format(datum[\"PER_CAPITA_PLASTIC\"], \"\")) + \"; Country: \" + (isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"]) + \"; Plastic waste per capita(kg): \" + (format(datum[\"PER_CAPITA_PLASTIC\"], \"0.3f\")) + \"; GDP per capita($): \" + (format(datum[\"GDP_PER_CAPITA\"], \"0.2f\"))"
+          },
+          "x": {"scale": "x", "field": "GDP_PER_CAPITA"},
+          "y": {"scale": "y", "field": "PER_CAPITA_PLASTIC"},
+          "text": {
+            "signal": "isValid(datum[\"Country\"]) ? datum[\"Country\"] : \"\"+datum[\"Country\"]"
+          }
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "log",
+      "domain": [1000, 100000],
+      "range": [0, {"signal": "width"}],
+      "nice": true
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {
+        "fields": [
+          {"data": "data_0", "field": "PER_CAPITA_PLASTIC"},
+          {"data": "data_1", "field": "PER_CAPITA_PLASTIC"}
+        ]
+      },
+      "range": [{"signal": "height"}, 0],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": [
+        "North America",
+        "South America",
+        "Europe",
+        "Africa",
+        "Asia",
+        "Oceania"
+      ],
+      "range": {"scheme": "set1"}
+    },
+    {
+      "name": "size",
+      "type": "threshold",
+      "domain": [
+        1000000,
+        5000000,
+        10000000,
+        50000000,
+        100000000,
+        500000000,
+        1000000000
+      ],
+      "range": {
+        "signal": "sequence(9, 361 + (361 - 9) / (8 - 1), (361 - 9) / (8 - 1))"
+      }
+    }
+  ],
+  "axes": [
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "gridScale": "y",
+      "grid": true,
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "GDP per Capita($ intl.)",
+      "labelFlush": true,
+      "labelOverlap": "greedy",
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Plastic per capita(kg)",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "symbolType": "circle",
+      "title": "Continent",
+      "encode": {
+        "labels": {
+          "name": "Continent_legend_labels",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"continent_highlight_store\")) || (continent_highlight[\"Continent\"] && indexof(continent_highlight[\"Continent\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "symbols": {
+          "name": "Continent_legend_symbols",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"continent_highlight_store\")) || (continent_highlight[\"Continent\"] && indexof(continent_highlight[\"Continent\"], datum.value) >= 0))",
+                "value": 0.6
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "entries": {
+          "name": "Continent_legend_entries",
+          "interactive": true,
+          "update": {"fill": {"value": "transparent"}}
+        }
+      }
+    },
+    {
+      "format": ".1s",
+      "size": "size",
+      "labelOverlap": "greedy",
+      "symbolType": "circle",
+      "title": "Population",
+      "encode": {
+        "symbols": {
+          "update": {
+            "fill": {"value": "black"},
+            "fillOpacity": {"value": 0.6},
+            "opacity": {"value": 0.6},
+            "stroke": {"value": "transparent"}
+          }
+        }
+      }
+    }
+  ],
+  "config": {}
+}
