@@ -6,7 +6,8 @@
   "height": 400,
   "title": {
     "text": "Plastic waste generation per person in 2010",
-    "frame": "group"
+    "frame": "group",
+    "fontSize":16
   },
   "style": "cell",
   "data": [
