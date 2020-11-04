@@ -2,7 +2,7 @@
   "$schema": "https://vega.github.io/schema/vega/v5.json",
   "background": "white",
   "padding": 5,
-  "width": 600,
+  "width": 500,
   "height": 200,
   "title": {
     "text": "Plastic Generated per Capita vs. GDP per Capita",
