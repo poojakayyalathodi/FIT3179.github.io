@@ -505,8 +505,7 @@
           {"data": "data_4", "field": "disposal"}
         ],
         "sort": true
-      },
-      "range": {"scheme": "set1"}
+      }
     }
   ],
   "axes": [
